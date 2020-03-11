@@ -37,20 +37,21 @@ void setup() {
 void loop() {
   WiFiClient client = wifiServer.available();
   if (client) {
- 
     while (client.connected()) {
       while (client.available()>0) {   
         // Read the hear beat signal
         Signal = analogRead(PulseSensorPurplePin);
+        // Send the signal to client
+        client.write(Signal);
         Serial.println(Signal);
+        
+        // Turn on the LEDs
         if(Signal > Threshold)
           digitalWrite(LED13,HIGH);
         } else {
           digitalWrite(LED13,LOW);
         }
         delay(10);
-
-        client.write(Signal);
 //        Serial.write(c);
       }      
     }
