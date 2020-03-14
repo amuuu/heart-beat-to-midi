@@ -1,13 +1,14 @@
+/////////////////////////////
 #include <SoftwareSerial.h>
-
+/////////////////////////////
 
 /////////////////////////
 /***** FOR ESP8266 *****/
 #define RX 10 
 #define TX 11
 SoftwareSerial esp(RX,TX);
-int ssid = "amu";
-int passwd = "amuamuamu";
+String ssid = "amu";
+String passwd = "amuamuamu";
 String data;
 String server = "yourServer";
 String uri = "yourURI";
@@ -19,8 +20,8 @@ String uri = "yourURI";
 /***** FOR HEART BEAT SENSOR *****/
 int PulseSensorPurplePin = 0; // analog pin 0
 int LED13 = 13;
-int Signal;                // holds the incoming raw data. Signal value can range from 0-1024
-int Threshold = 550;            // Determine which Signal to "count as a beat", and which to ingore.
+int Signal; // holds the incoming raw data. Signal value can range from 0-1024
+int Threshold = 550;  // Determine which Signal to "count as a beat", and which to ingore.
 /*********************************/
 ///////////////////////////////////
 ///////////////////////////////////
@@ -39,10 +40,10 @@ void loop() {
   int signal = readHeartBeats();
   
  //Serial.println(Signal);
-  HandleLEDs(signal);
-
-
-  delay(10);
+  handleLEDs(signal);
+  httpPost(signal);
+  
+  delay(1000);
 
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -61,11 +62,11 @@ void connectWifi() {
   esp.println(setup_cmd);
   delay(1000);
   
-  String connect_cmd = "AT+CWJAP=\"" +ssid+"\",\"" + password + "\"";
+  String connect_cmd = "AT+CWJAP=\""+ssid+"\",\""+passwd+"\"";
   esp.println(connect_cmd);
   delay(4000);
   if(esp.find("OK")) {
-    Serial.println("Connected!");
+    Serial.println("Connected to wifi successfully!");
   }
   else {
     connectWifi();
@@ -87,3 +88,46 @@ void handleLEDs(int signal) {
    }
 }
 ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+void httpPost(int data) {
+  String data_str = String(data, HEX);
+  
+  esp.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");//start a TCP connection.
+  
+  if( esp.find("OK")) {
+    Serial.println("TCP connection ready");
+  }
+  delay(1000);
+  
+  String postRequest =
+         "POST " + uri + " HTTP/1.0\r\n" +
+         "Host: " + server + "\r\n" +
+         "Accept: *" + "/" + "*\r\n" +
+         "Content-Length: " + data_str.length() + "\r\n" +  
+         "Content-Type: application/x-www-form-urlencoded\r\n" +
+         "\r\n" + data_str;
+  
+  String sendCmd = "AT+CIPSEND=";//determine the number of caracters to be sent.
+  
+  esp.print(sendCmd);
+  esp.println(postRequest.length());
+  
+  delay(500);
+  
+  if(esp.find(">")) {
+    Serial.println("Sending..");
+    esp.print(postRequest);
+    
+    if(esp.find("SEND OK")) {
+      Serial.println("Packet sent");
+      
+      while (esp.available()) {
+        String tmpResp = esp.readString();
+        Serial.println(tmpResp);
+      }
+      
+      // close the connection
+      esp.println("AT+CIPCLOSE");
+    }
+  }
+}
