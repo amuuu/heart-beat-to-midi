@@ -41,15 +41,11 @@ void setup() {
 
 void loop() {
 
-  Signal = analogRead(PulseSensorPurplePin);
+  int signal = readHeartBeats();
+  
+//Serial.println(Signal);
+  HandleLEDs(signal);
 
-//   Serial.println(Signal);
-
-   if(Signal > Threshold){
-     digitalWrite(LED13,HIGH);
-   } else {
-     digitalWrite(LED13,LOW);
-   }
 
   delay(10);
 
@@ -88,4 +84,18 @@ void connectWifi() {
     connectWifi();
     Serial.println("Cannot connect to wifi");
   }  
+}
+
+
+
+int readHeartBeats() {  
+  return analogRead(PulseSensorPurplePin);
+}
+
+void handleLEDs(int signal) {
+  if(Signal > Threshold){
+     digitalWrite(LED13,HIGH);
+   } else {
+     digitalWrite(LED13,LOW);
+   }
 }
