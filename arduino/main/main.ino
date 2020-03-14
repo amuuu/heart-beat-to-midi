@@ -1,6 +1,8 @@
 #include <SoftwareSerial.h>
 
 
+
+
 /***** FOR ESP8266 *****/
 #define RX 10 
 #define TX 11
@@ -13,6 +15,7 @@ String uri = "yourURI";
 /***********************/
 
 
+
 /***** FOR HEART BEAT SENSOR *****/
 int PulseSensorPurplePin = 0; // analog pin 0
 int LED13 = 13;
@@ -21,14 +24,21 @@ int Threshold = 550;            // Determine which Signal to "count as a beat", 
 /*********************************/
 
 
+
+
+
 void setup() {
-  pinMode(LED13,OUTPUT);         // Blink the heart beat
-  Serial.begin(9600);
-  esp.begin(9600); // Serial connection for ESP8266
+  pinMode(LED13,OUTPUT);  // Blink the heart beat
+  Serial.begin(9600); // Normal serial connection baud rate
+  esp.begin(9600);  // Serial connection for ESP8266 baud rate
 
   resetESP();
   connectWifi();
 }
+
+
+
+
 void loop() {
 
   Signal = analogRead(PulseSensorPurplePin);
@@ -46,6 +56,10 @@ void loop() {
 }
 
 
+
+
+
+
 void resetESP() {
   esp.println("AT+RST");
   delay(1000);
@@ -53,6 +67,10 @@ void resetESP() {
     Serial.println("Module Reset");
     
 }
+
+
+
+
 
 
 void connectWifi() {
@@ -68,5 +86,6 @@ void connectWifi() {
   }
   else {
     connectWifi();
-    Serial.println("Cannot connect to wifi"); }  
+    Serial.println("Cannot connect to wifi");
+  }  
 }
