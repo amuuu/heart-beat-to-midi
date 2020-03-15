@@ -1,4 +1,6 @@
 import rtmidi
+from signalthread import *
+
 
 
 class RtMidi():
@@ -13,3 +15,7 @@ class RtMidi():
             self.midiout.open_port(self.port)
         else:
             self.midiout.open_virtual_port("Virtual output")
+
+    def send_signal(self, value):
+        play_thread = midi_signal_thread(self.midiout, value)
+        play_thread.start()

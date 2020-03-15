@@ -1,6 +1,5 @@
 import numpy as np
 
-from signalthread import *
 from util import *
 
 
@@ -21,5 +20,4 @@ class DataProcessor():
             idx = (np.abs(self.notes-value)).argmin()
             value = self.notes[idx]
 
-        play_thread = midi_signal_thread(midiout, value)
-        play_thread.start()
+        return value
