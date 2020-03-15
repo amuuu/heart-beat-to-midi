@@ -1,24 +1,27 @@
 import socket
 from dataprocessor import *
+from rtmidihandler import *
 
 print("Initializing the server.")
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 dp = DataProcessor("D#m", 1)
+rt = RtMidi(2)
 print("Server is up and listening")
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
-    s.listen()
-    conn, addr = s.accept()
-    with conn:
-        print('Connected by', addr)
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            else:
-                dp.process_data(data)
-            conn.sendall(data)
+with rt.midiout:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            print('Connected by', addr)
+            while True:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                else:
+                    dp.process_data(data)
+                conn.sendall(data)
 
