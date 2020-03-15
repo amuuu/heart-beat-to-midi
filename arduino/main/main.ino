@@ -28,10 +28,13 @@ int Threshold = 550;  // Determine which Signal to "count as a beat", and which 
 void setup() {
   pinMode(LED13,OUTPUT);  // Blink the heart beat
   Serial.begin(9600); // Normal serial connection baud rate
-  esp.begin(9600);  // Serial connection for ESP8266 baud rate
+  esp.begin(115200);  // Serial connection for ESP8266 baud rate
 
   resetESP();
   connectWifi();
+  esp.println("Waiting 5 seconds to start");
+  delay(5000);
+  esp.println("Alright, let's go");
 }
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -39,11 +42,11 @@ void loop() {
 
   int signal = readHeartBeats();
   
- //Serial.println(Signal);
+  Serial.println(signal);
   handleLEDs(signal);
-  httpPost(signal);
+  //httpPost(signal);
   
-  delay(1000);
+  delay(10);
 
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -81,7 +84,7 @@ int readHeartBeats() {
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 void handleLEDs(int signal) {
-  if(Signal > Threshold){
+  if(signal > Threshold){
      digitalWrite(LED13,HIGH);
    } else {
      digitalWrite(LED13,LOW);
