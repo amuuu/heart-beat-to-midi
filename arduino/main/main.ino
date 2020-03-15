@@ -18,12 +18,19 @@ String uri = "yourURI";
 ///////////////////////////////////
 ///////////////////////////////////
 /***** FOR HEART BEAT SENSOR *****/
-int PulseSensorPurplePin = 0; // analog pin 0
+int pulseSensorPurplePin = 0; // analog pin 0
 int LED13 = 13;
-int Signal; // holds the incoming raw data. Signal value can range from 0-1024
-int Threshold = 550;  // Determine which Signal to "count as a beat", and which to ingore.
+int signal; // holds the incoming raw data. Signal value can range from 0-1024
+int threshold = 550;  // Determine which Signal to "count as a beat", and which to ingore.
 /*********************************/
 ///////////////////////////////////
+
+///////////////////////////////
+/***** GENERAL VARIABLES *****/
+int timerCounter = 0;
+/*****************************/
+///////////////////////////////
+
 ///////////////////////////////////
 void setup() {
   pinMode(LED13,OUTPUT);  // Blink the heart beat
@@ -40,10 +47,14 @@ void setup() {
 ///////////////////////////////////////////////////////////////////////////
 void loop() {
 
-  int signal = readHeartBeats();
+  signal = readHeartBeats();
   Serial.println(signal);
   handleLEDs(signal);
-  //httpPost(signal);
+
+  timerCounter++;
+  if (timerCounter % 50) { // Every 500 milliseconds send the new data to server
+    //httpPost(signal);  
+  }
   
   delay(10);
 
@@ -80,12 +91,12 @@ void connectWifi() {
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 int readHeartBeats() {  
-  return analogRead(PulseSensorPurplePin);
+  return analogRead(pulseSensorPurplePin);
 }
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 void handleLEDs(int signal) {
-  if(signal > Threshold){
+  if(signal > threshold){
      digitalWrite(LED13,HIGH);
    } else {
      digitalWrite(LED13,LOW);
