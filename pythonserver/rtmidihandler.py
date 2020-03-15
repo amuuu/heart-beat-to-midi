@@ -1,6 +1,6 @@
 import rtmidi
-from signalthread import *
 
+from signalthread import *
 
 
 class RtMidi():
