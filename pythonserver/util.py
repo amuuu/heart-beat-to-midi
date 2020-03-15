@@ -23,6 +23,5 @@ def compute_scale_notes(scale_name, scale_type):
         for i in range(1, 7): #from c2 to c7 (6 octaves)
             notes.extend([base_note, base_note+2, base_note+3, base_note+5, base_note+7, base_note+8, base_note+10])
             base_note += 12 # go one octave further
-
-    # print(notes)
+    
     return np.asarray(notes)
