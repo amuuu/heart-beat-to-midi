@@ -1,14 +1,13 @@
-from util import *
 import numpy as np
+
+from signalthread import *
+from util import *
 
 
 class DataProcessor():
-    # scale_type 0:none /1:major /2:minor
-    scale_type = 1 # the place for this should change
-    scale_name = "D#m" # the place for this should change too.
-    notes = []
+    # scale_type 0:none/1:major/2:minor
 
-    def __init__(self, scale_name, scale_type):
+    def __init__(self, scale_name="D#m", scale_type=1):
         self.scale_type = scale_type # this should be calculated based on the scale name. (M or m)
         self.scale_name = scale_name.lower().rsplit('m',1)[0]
         self.notes = compute_scale_notes(self.scale_name, self.scale_type)
@@ -19,5 +18,8 @@ class DataProcessor():
         
         # quantize the value for minor/major scale
         if self.scale_type != 0:
-            idx = (np.abs(notes-value)).argmin()
+            idx = (np.abs(self.notes-value)).argmin()
             value = self.notes[idx]
+
+        play_thread = midi_signal_thread(midiout, value)
+        play_thread.start()

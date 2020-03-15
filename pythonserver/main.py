@@ -1,9 +1,13 @@
 import socket
+from dataprocessor import *
 
+print("Initializing the server.")
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
-print("Server is up...")
+dp = DataProcessor("D#m", 1)
+print("Server is up and listening")
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
@@ -15,6 +19,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if not data:
                 break
             else:
-                pass
+                dp.process_data(data)
             conn.sendall(data)
 
