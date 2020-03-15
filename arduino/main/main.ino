@@ -27,8 +27,8 @@ int Threshold = 550;  // Determine which Signal to "count as a beat", and which 
 ///////////////////////////////////
 void setup() {
   pinMode(LED13,OUTPUT);  // Blink the heart beat
-  Serial.begin(9600); // Normal serial connection baud rate
   esp.begin(115200);  // Serial connection for ESP8266 baud rate
+  Serial.begin(9600); // Normal serial connection baud rate
 
   resetESP();
   connectWifi();
@@ -41,7 +41,6 @@ void setup() {
 void loop() {
 
   int signal = readHeartBeats();
-  
   Serial.println(signal);
   handleLEDs(signal);
   //httpPost(signal);
@@ -61,10 +60,12 @@ void resetESP() {
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 void connectWifi() {
+  Serial.println("Changing at+cwmode");
   String setup_cmd = "AT+CWMODE=3"; 
   esp.println(setup_cmd);
   delay(1000);
-  
+
+  Serial.println("Connecting to wifi");
   String connect_cmd = "AT+CWJAP=\""+ssid+"\",\""+passwd+"\"";
   esp.println(connect_cmd);
   delay(4000);
