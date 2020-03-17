@@ -7,7 +7,7 @@ HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
 dp = DataProcessor(scale_name="D#m", scale_type=1)
-rt = RtMidi(port=2)
+rt = RtMidi(port=2, channel=1)
 print("Server is up and listening...")
 
 with rt.midiout:

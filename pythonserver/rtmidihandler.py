@@ -4,13 +4,14 @@ from signalthread import *
 
 
 class RtMidi():
-    def __init__(self, port):
+    def __init__(self, port, channel):
         self.port = port
-        
+        self.channel = channel
+
         self.midiout = rtmidi.MidiOut()
         self.available_ports = self.midiout.get_ports()
         
-        print(self. available_ports)
+        print(self.available_ports)
         if self.available_ports:
             self.midiout.open_port(self.port)
         else:
