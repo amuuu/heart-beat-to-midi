@@ -5,7 +5,7 @@ window.title("Heart Beats to MIDI")
 window.option_add("*Font", "consolas 10 bold")
 # window.option_add("*Background", "light blue")
 window.geometry('350x200')
-padx, pady = 10, 5
+padx, pady = 15, 5
 # window.pack(fill=BOTH, expand=True)
 
 frame1 = Frame(window)
@@ -50,7 +50,7 @@ def clicked():
     res = "Welcome to " + scale_name.get() + " and " + scale_type.get() + " and " + midi_port.get() + " and " + midi_channel.get()
     result_lbl.configure(text= res)
 
-btn = Button(frame1, text="Click Me", command=clicked)
-btn.grid(column=0, row=4, pady=pady)
+btn = Button(frame1, text="Make Music!", command=clicked)
+btn.grid(column=0, row=4, padx=padx, pady=pady)
 
 window.mainloop()
