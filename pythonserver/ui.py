@@ -4,7 +4,7 @@ window = Tk()
 window.title("Heart Beats to MIDI")
 window.option_add("*Font", "consolas 10 bold")
 # window.option_add("*Background", "light blue")
-window.geometry('350x200')
+window.geometry('350x300')
 padx, pady = 15, 5
 # window.pack(fill=BOTH, expand=True)
 
@@ -50,7 +50,15 @@ def clicked():
     res = "Welcome to " + scale_name.get() + " and " + scale_type.get() + " and " + midi_port.get() + " and " + midi_channel.get()
     result_lbl.configure(text= res)
 
+
 btn = Button(frame1, text="Make Music!", command=clicked)
 btn.grid(column=0, row=4, padx=padx, pady=pady)
+
+frame3 = Frame(window)
+frame3.pack(fill=X)
+
+console_fld = Text(frame3, height=2, width=30)
+console_fld.insert(END, "Just a text Widget\nin two lines\n")
+console_fld.grid(row=6, column=6, padx=padx, pady=pady)
 
 window.mainloop()
