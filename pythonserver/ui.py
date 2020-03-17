@@ -2,6 +2,8 @@ from tkinter import *
 
 window = Tk()
 window.title("Heart Beats to MIDI")
+window.option_add("*Font", "consolas 10 bold")
+# window.option_add("*Background", "light blue")
 window.geometry('350x200')
 padx, pady = 10, 5
 # window.pack(fill=BOTH, expand=True)
