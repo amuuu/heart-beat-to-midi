@@ -2,10 +2,10 @@ import socket
 from dataprocessor import *
 from rtmidihandler import *
 
-print("Initializing the server.")
-HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
+HOST = '192.168.43.26'  # Your local network IP
+PORT = 80
 
+print("Initializing the server on", HOST, ":", PORT)
 dp = DataProcessor(scale_name="D#m", scale_type=1)
 rt = RtMidi(port=2, channel=1)
 print("Server is up and listening...")
@@ -20,9 +20,12 @@ with rt.midiout:
             while True:
                 data = conn.recv(1024)
                 if not data:
-                    break
+                    pass
                 else:
-                    rt.send_signal(dp.process_data(data))
+                    # rt.send_signal(dp.process_data(data))
+                    print("data is", data)
+                    # print("RESULT",dp.process_data(data))
+
                 conn.sendall(data)
 
 
