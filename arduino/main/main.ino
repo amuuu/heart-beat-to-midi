@@ -53,7 +53,8 @@ void loop() {
 
   timerCounter++;
   if (timerCounter % 50) { // Every 500 milliseconds send the new data to server
-    //httpPost(signal);  
+    httpPost(signal);
+    Serial.println("sent: "+signal);
   }
   
   delay(10);
