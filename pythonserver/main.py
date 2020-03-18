@@ -14,19 +14,22 @@ with rt.midiout:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
-        conn, addr = s.accept()
-        with conn:
-            print('Connected by', addr)
-            while True:
-                data = conn.recv(1024)
-                if not data:
-                    pass
-                else:
-                    # rt.send_signal(dp.process_data(data))
-                    print("data is", data)
-                    # print("RESULT",dp.process_data(data))
+        while True:
+            conn, addr = s.accept()
+            try:
+            # with conn:
+                print('Connected by', addr)
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
+                    else:
+                        rt.send_signal(dp.process_data(data.split("oded\r\n\r\n",1)[1])) # pick the value from the request sent from arduino,
+                                                                                         # process it, and send out midi signal.
 
-                conn.sendall(data)
+                    # conn.sendall(data)
+            finally:
+                conn.close()
 
 
 rt.midiout.close_port()
