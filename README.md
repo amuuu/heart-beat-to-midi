@@ -8,3 +8,6 @@ https://medium.com/@cgrant/using-the-esp8266-wifi-module-with-arduino-uno-publis
 
 ## What software tools does this need?
 The server code is written in python. You should install `numpy` and `rtmidi` modules to run the server. The GUI is coded with `Tkinter`.
+
+## TO DO LIST:
+1) Connect UI to server
