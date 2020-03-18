@@ -10,8 +10,8 @@ SoftwareSerial esp(RX,TX);
 String ssid = "amu";
 String passwd = "amuamuamu";
 String data;
-String server = "yourServer";
-String uri = "yourURI";
+String server = "192.168.43.26"; // Your local server IP or any other IP
+String uri = "/";
 /***********************/
 /////////////////////////
 
@@ -20,7 +20,7 @@ String uri = "yourURI";
 /***** FOR HEART BEAT SENSOR *****/
 int pulseSensorPurplePin = 0; // analog pin 0
 int LED13 = 13;
-int signal; // holds the incoming raw data. Signal value can range from 0-1024
+int heartsignal=0; // holds the incoming raw data. Signal value can range from 0-1024
 int threshold = 550;  // Determine which Signal to "count as a beat", and which to ingore.
 /*********************************/
 ///////////////////////////////////
@@ -39,25 +39,21 @@ void setup() {
 
   resetESP();
   connectWifi();
-  esp.println("Waiting 5 seconds to start");
   delay(5000);
-  esp.println("Alright, let's go");
 }
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 void loop() {
 
-  signal = readHeartBeats();
-  Serial.println(signal);
-  handleLEDs(signal);
+  heartsignal = readHeartBeats();
+  Serial.println(heartsignal);
+  handleLEDs(heartsignal);
 
   timerCounter++;
-  if (timerCounter % 50) { // Every 500 milliseconds send the new data to server
-    httpPost(signal);
-    Serial.println("sent: "+signal);
+  if (timerCounter % 2) { // Every 500 milliseconds send the new data to server
+    httpPost(heartsignal);
   }
-  
-  delay(10);
+  delay(100);
 
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -96,8 +92,8 @@ int readHeartBeats() {
 }
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void handleLEDs(int signal) {
-  if(signal > threshold){
+void handleLEDs(int heartsignal) {
+  if(heartsignal > threshold){
      digitalWrite(LED13,HIGH);
    } else {
      digitalWrite(LED13,LOW);
@@ -106,12 +102,18 @@ void handleLEDs(int signal) {
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 void httpPost(int data) {
-  String data_str = String(data, HEX);
+  String data_str = String(data);
   
-  esp.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");//start a TCP connection.
-  
+//  esp.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");//start a TCP connection.
+//  
   if( esp.find("OK")) {
-    Serial.println("TCP connection ready");
+    Serial.println("TCP connection already ready");
+  }
+  else {
+    esp.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");//start a TCP connection.
+    if( esp.find("OK")) {
+      Serial.println("TCP connection ready for the first time");
+    }
   }
   delay(1000);
   
@@ -139,7 +141,7 @@ void httpPost(int data) {
       
       while (esp.available()) {
         String tmpResp = esp.readString();
-        Serial.println(tmpResp);
+        Serial.println("tmpresp"+tmpResp);
       }
       
       // close the connection
