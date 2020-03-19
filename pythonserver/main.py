@@ -24,7 +24,10 @@ with rt.midiout:
                     if not data:
                         break
                     else:
-                        rt.send_signal(dp.process_data(data.split("oded\r\n\r\n",1)[1])) # pick the value from the request sent from arduino,
+                        print(data)
+                        if "TCP".encode() not in data:
+                            integer_data= (int)(data.split("oded\r\n\r\n".encode(),1)[1])
+                            rt.send_signal(dp.process_data(integer_data)) # pick the value from the request sent from arduino,
                                                                                          # process it, and send out midi signal.
 
                     # conn.sendall(data)
