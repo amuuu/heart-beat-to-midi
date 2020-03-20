@@ -6,7 +6,7 @@ HOST = '192.168.43.26'  # Your local network IP
 PORT = 80
 
 print("Initializing the server on", HOST, ":", PORT)
-dp = DataProcessor(scale_name="D#m", scale_type=1)
+dp = DataProcessor(scale_name="D#m", scale_type=1) # scale_type 0:none/1:major/2:minor
 rt = RtMidi(port=2, channel=1)
 print("Server is up and listening...")
 
